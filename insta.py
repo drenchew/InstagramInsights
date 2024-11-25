@@ -42,7 +42,7 @@ class InstagramInsights:
             return followers_usernames
         except Exception as e:
             print(f"An error occurred: {e}")
-            return []
+            raise {f'Cant get followers of {username}'}
 
     def get_unfollowers(self, username, save=False):
         """
@@ -59,7 +59,7 @@ class InstagramInsights:
             with open('followers.txt', 'r') as file:
                 previous_followers = set(file.read().splitlines())
 
-            current_followers = set(self.get_followers(username))
+            current_followers = set(self.get_followers(username, save=True))
             unfollowers = previous_followers.difference(current_followers)
 
             if save:
@@ -74,50 +74,9 @@ class InstagramInsights:
         except Exception as e:
             print(f"An error occurred: {e}")
             return set()
-    def loop(self, username):
         
-        while True:
-            try:
-                print("Saving current followers...")
-                followers = self.get_followers(username, save=True)
-                print("Checking for unfollowers...")
-                unfollowers = self.get_unfollowers(username, save=True)
-                print(f"Unfollowers: {unfollowers}")
-            except KeyboardInterrupt:
-                print("Exiting...")
-                break
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                break
 
-
-
-def submit(input_user, input_pass):
-        usr = input_user.get()
-        ps = input_pass.get()
-        print(usr)
-        print(ps)
 
 if __name__ == "__main__":
-
-
-    root = tk.Tk()
-    root.title("Instagram Insights")
-
-    user = ttk.Entry(root)
-    user.pack()
-
-
-    password = ttk.Entry(root)
-    password.pack()
-
-    
-    ttk.Label(root, text="Username").pack()
-    ttk.Label(root, text="Password").pack()
-
-    ttk.Button(root, command=lambda: submit(user,password), text="Submit").pack()
-
-
-
-
-    root.mainloop()
+   
+ pass
