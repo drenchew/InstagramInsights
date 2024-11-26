@@ -15,7 +15,7 @@ class InstagramInsights:
             print(f"Login failed: {e}")
             raise
 
-    def get_followers(self, username, save=False):
+    def get_followers(self, username, save=False,mode = 'a'):
         """
         Get the list of followers of a specified user.
 
@@ -33,16 +33,20 @@ class InstagramInsights:
 
             for follower in followers:
                 follower_username = follower.username + '\n'
-                if save:
-                    with open('followers.txt', 'a') as file:
-                        file.write(follower_username)
 
-                followers_usernames.append(follower_username.strip())
+                followers_usernames.append(follower_username)
+            
+            if save:
+                with open('followers.txt', mode) as file:
+                    for follower in followers_usernames:
+                        file.write(follower)
+                        #file.write('\n')
+                        
 
             return followers_usernames
         except Exception as e:
             print(f"An error occurred: {e}")
-            raise {f'Cant get followers of {username}'}
+            raise {f'Cant get followers of {username}'}.splitlines()
 
     def get_unfollowers(self, username, save=False):
         """
@@ -57,19 +61,28 @@ class InstagramInsights:
         """
         try:
             with open('followers.txt', 'r') as file:
-                previous_followers = set(file.read().splitlines())
+                previous_followers = (file.read().splitlines())
+                #add \n to each username
+                previous_followers = set([follower + '\n' for follower in previous_followers])
+                if not previous_followers:
+                    raise FileNotFoundError
 
-            current_followers = set(self.get_followers(username, save=True))
+            current_followers = set(self.get_followers(username, save=True,mode='w'))
             unfollowers = previous_followers.difference(current_followers)
 
             if save:
-                with open('unfollowers.txt', 'w') as file:
+                #clear the file
+                open('unfollowers.txt', 'w').close()
+
+                with open('unfollowers.txt', 'a') as file:
                     for unfollower in unfollowers:
                         file.write(unfollower + '\n')
 
             return unfollowers
         except FileNotFoundError:
             print("followers.txt not found. Run get_followers() first to save initial followers.")
+            self.get_followers(username, save=True,mode = 'a')
+
             return set()
         except Exception as e:
             print(f"An error occurred: {e}")

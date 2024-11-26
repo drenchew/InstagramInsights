@@ -10,15 +10,16 @@ def open_file():
     os.startfile('unfollowers.txt')
 
 def show_file():
-
+   
     open_button = tk.Button(root, text="Open", command=open_file)
-    open_button.place.pack()
+    open_button.place(x=120, y=185)
     tk.Label(root, text="Ready! Check the unfollowers.txt file.", bg="cyan").place(x=50, y=160)
 
 
 def login():
     username = username_entry.get()
     password = password_entry.get()
+    
     if username and password:
         try:
             instagram = InstagramInsights(username, password)
@@ -29,20 +30,20 @@ def login():
     else:
         messagebox.showwarning("Input Error", "Please enter both username and password.")
 
-def background():
-    background_image = Image.open("bg.png")  
-    background_image = background_image.resize((300, 200))
-    bg_photo = ImageTk.PhotoImage(background_image)
 
-    canvas = tk.Canvas(root, width=300, height=200)
-    canvas.pack(fill="both", expand=True)
-    canvas.create_image(0, 0, image=bg_photo, anchor="nw")
 
 root = tk.Tk()
 root.title("Instagram Insights")
-root.geometry("300x200")
+root.geometry("300x225")
 
-background()  
+
+background_image = Image.open("bg.png")  
+background_image = background_image.resize((300, 300))
+bg_photo = ImageTk.PhotoImage(background_image)
+
+canvas = tk.Canvas(root, width=300, height=300)
+canvas.pack(fill="both", expand=True)
+canvas.create_image(0, 0, image=bg_photo, anchor="nw")
 
 username_label = tk.Label(root, text="Username:", bg="cyan") 
 username_label.place(x=50, y=50)
